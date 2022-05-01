@@ -78,11 +78,53 @@ namespace WindowsFormsApp2
 
         }
 
-
-
         private void Ok_Click(object sender, EventArgs e)
         {
             Close();
         }
-    }
+    
+
+        private void Export_Click(object sender, EventArgs e)
+        {
+            if(dataGridView1.Rows.Count > 0)
+            {
+                SaveFileDialog save = new SaveFileDialog();
+                save.Filter = "CSV (*.csv)|*.csv";
+                save.FileName = "Password List.csv";
+
+                if (save.ShowDialog() == DialogResult.OK)
+                {
+                    int columns = dataGridView1.ColumnCount;
+                    string columnName = "";
+                    string[] output = new string[dataGridView1.Rows.Count + 1];
+                    for (int i = 0; i < columns; i++)
+                    {
+                        columnName += dataGridView1.Columns[i].HeaderText.ToString();
+                    }
+                    output[0] += columnName;
+
+                    for (int i = 1; (i - 1) < dataGridView1.Rows.Count; i++)
+                    {
+                        for (int j = 0; j < columns; j++)
+                        {
+                            if(dataGridView1.Rows[i - 1].Cells[j].Value  == null)
+                            {
+                                output[i] += "";
+                            }
+                            else if(dataGridView1.Rows[i - 1].Cells[j].Value != null)
+                            {
+                                output[i] += dataGridView1.Rows[i - 1].Cells[j].Value.ToString() + ",";
+                            }
+                            
+                        }
+                    }
+
+                    File.WriteAllLines(save.FileName, output, Encoding.UTF8);
+                    MessageBox.Show("File saved successfully");
+
+                }
+
+            }
+        }
+
 }
