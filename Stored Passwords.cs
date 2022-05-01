@@ -25,7 +25,7 @@ namespace WindowsFormsApp2
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            // TODO: This line of code loads data into the 'passwordsDataSet.Passwords' table. You can move, or remove it, as needed.
+        // TODO: This line of code loads data into the 'passwordsDataSet.Passwords' table. You can move, or remove it, as needed.
             this.passwordsTableAdapter.Fill(this.passwordsDataSet.Passwords);
 
         }
@@ -39,34 +39,41 @@ namespace WindowsFormsApp2
         {
             int i = 0;
 
-            if (dataGridView1.SelectedRows.Count == 0)
+            if(dataGridView1.SelectedRows.Count > 0)
             {
-                return;
+                dataGridView1.Rows.Remove(dataGridView1.SelectedRows[0]);
+
+                var delete = dataGridView1.SelectedRows[0].DataBoundItem;
+
+                i++;
+                
+
             }
+            
+            
+            // This code will only run when a database is connected so commenting this out for now
+            // This updates the records in the database when the records are deleted from the datagrid view.
 
-            Form1 sub = new Form1();
+//             using (var pw = new SqlConnection(sub.ConnectionString()))
+//             {
+//                 pw.Open();
 
-            var ItemDelete = (Form2)dataGridView1.SelectedRows[0].DataBoundItem;
+//                 using (var delete = new SqlCommand("sp_delete", pw))
+//                 {
+//                     delete.Parameters.AddWithValue("@ID", ItemDelete);
+//                     delete.ExecuteNonQuery();
 
-            using (var pw = new SqlConnection(sub.ConnectionString()))
-            {
-                pw.Open();
-
-                using (var delete = new SqlCommand("sp_delete", pw))
-                {
-                    delete.Parameters.AddWithValue("@ID", ItemDelete);
-                    delete.ExecuteNonQuery();
-
-                    var datasource = (BindingList<Form2>)dataGridView1.DataSource;
-                    datasource.Remove(ItemDelete);
+//                     var datasource = (BindingList<Form2>)dataGridView1.DataSource;
+//                     datasource.Remove(ItemDelete);
                     
-                    i++;
-                }
-            }
+//                     i++;
+//                 }
+//             }
 
             if (i != 0)
             {
                 MessageBox.Show("Record Deleted");
+                i--;
             }
 
         }
